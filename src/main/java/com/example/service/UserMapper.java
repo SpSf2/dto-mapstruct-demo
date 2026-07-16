@@ -33,14 +33,20 @@ public interface UserMapper {
 * Para lo anterior hay que utilizar la anotacion @BeanMapping
 */
 // @BeanMapping(ignoreByDefault = true)
-// @Mapping(source = "username", target = "name")
-// UserResponse mapUserToUserResponse(User user);
+/*@Mapping(source = "username", target = "name")
+UserResponse mapUserToUserResponse(User user);*/
 
 /*
 Mapear User y Contact a UserResponse
 
 Cambiamos el nombre del metodo
 */
+    @Mapping(source = "username", target = "name")
+    @Mapping(source = "dateOfBirth", target = "dob")
+    @Mapping(source = "status", target = "status", defaultValue = "INACTIVE")
+    @Mapping(target = "password", ignore = true)       
+    UserResponse mapUserToUserResponse(User user);
+
     //eliminamos el código anterior y creamos uno  nuevo:
     @Mapping(source = "user.id", target = "id")
     @Mapping(source = "user.username", target = "name")

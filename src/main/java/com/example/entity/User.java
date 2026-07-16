@@ -1,7 +1,13 @@
 package com.example.entity;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,5 +39,24 @@ public class User implements java.io.Serializable {
     private String password;
     private LocalDate dateOfBirth;
     private String status;
+
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+        name = "users_contacts",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "contact_id")
+    )
+    @Builder.Default
+    private Set<Contact> contacts = new HashSet<>();
+
+    public void addContact(Contact contact) {
+        this.contacts.add(contact);
+        contact.getUsers().add(this);
+    }
+
+    public void removeContact(Contact contact) {
+        this.contacts.remove(contact);
+        contact.getUsers().remove(this);
+    }
 }
 

@@ -15,8 +15,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
     private final UserMapper userMapper;
-    private final ContactService contactService;
-    
+       
     @Override
     public UserResponse getUserById(long id) {
 
@@ -24,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userDao.findById(id).orElseThrow(() -> 
             new RuntimeException("User not found!!!"));
-                Contact contact = contactService.getContactById(id);
+                Contact contact = user.getContacts().stream().findFirst().orElse(null);
 
                 userResponse = userMapper.mapUserAndContactToUserResponse(user, contact);
 
