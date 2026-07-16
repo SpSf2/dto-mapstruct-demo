@@ -9,5 +9,10 @@ public record UserResponse(
 long id,
 String name,
 String password,
-String dob
+String dob,
+String status,
+ //Se agregan campos para mapear los campos de Contact
+String mob,
+String emailId
+
 ) {}
