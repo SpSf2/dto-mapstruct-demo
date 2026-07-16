@@ -6,6 +6,7 @@ import com.example.dao.UserDao;
 import com.example.dto.UserResponse;
 import com.example.entity.Contact;
 import com.example.entity.User;
+import com.example.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService {
         UserResponse userResponse = null;
 
         User user = userDao.findById(id).orElseThrow(() -> 
-            new RuntimeException("User not found!!!"));
+                            new ResourceNotFoundException("User not found with id: " + id));
                 Contact contact = user.getContacts().stream().findFirst().orElse(null);
 
                 userResponse = userMapper.mapUserAndContactToUserResponse(user, contact);
