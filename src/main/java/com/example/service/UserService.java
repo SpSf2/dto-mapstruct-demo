@@ -7,4 +7,5 @@ public interface UserService {
 
     UserResponse getUserById(long id);
     UserResponse createUser(UserRequest request);
+    void deleteUser(Long id);
 }

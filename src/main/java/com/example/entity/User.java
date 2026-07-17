@@ -55,9 +55,16 @@ public class User implements java.io.Serializable {
         contact.getUsers().add(this);
     }
 
-    public void removeContact(Contact contact) {
-        this.contacts.remove(contact);
-        contact.getUsers().remove(this);
+    public void removeContact(Long contactId) {
+        Contact contact = this.contacts.stream()
+            .filter(c -> c.getUserId() == contactId)
+            .findFirst()
+            .orElse(null);
+
+        if (contact != null) {
+            this.contacts.remove(contact);
+            contact.getUsers().remove(this);
+        }
     }
 }
 

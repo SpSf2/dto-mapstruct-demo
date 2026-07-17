@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.HashSet;
+
 import org.springframework.stereotype.Service;
 
 import com.example.dao.UserDao;
@@ -8,6 +10,7 @@ import com.example.dto.UserRequest;
 import com.example.dto.UserResponse;
 import com.example.entity.Contact;
 import com.example.entity.User;
+import com.example.exception.ResourceNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +24,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getUserById(long id) {
         User user = userDao.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found!!!"));
-     
+                .orElseThrow(() -> new ResourceNotFoundException("User not found!!!"));
+                        
         return userMapper.mapUserToUserResponse(user);
     }
 
@@ -48,4 +51,21 @@ public class UserServiceImpl implements UserService {
         User saved = userDao.save(user);
         return userMapper.mapUserToUserResponse(saved);
     }
+
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userDao.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        for (Contact contact : new HashSet<>(user.getContacts())) {
+            user.getContacts().remove(contact);
+            contact.getUsers().remove(user);
+        }
+
+        userDao.save(user);
+        userDao.delete(user);
+    }
+
+
 }
